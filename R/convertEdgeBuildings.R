@@ -72,6 +72,7 @@ convertEdgeBuildings <- function(x, subtype = "FE") {
 
 
   if (subtype == "FE") {
+    # browser()
     #---- Explanations
     # For the historical data, weights are directly taken from the IEA
     # to ensure the consistency at the country level
@@ -142,6 +143,7 @@ convertEdgeBuildings <- function(x, subtype = "FE") {
 
     # Reduce the dimensions of the weights
     wfe <- wfe[, getYears(x), getNames(x, dim = "item")]
+  
 
     # Disaggregate and fill the gaps
     xadd <- toolAggregate(x, mappingfile, weight = wfe,
@@ -167,6 +169,8 @@ convertEdgeBuildings <- function(x, subtype = "FE") {
 
     result[getRegions(WH_growth), getYears(WH_growth), getNames(WH_growth)] <- result[getRegions(WH_growth), getYears(WH_growth), getNames(WH_growth)] - WH_growth
     result[reg_TUR, getYears(WH_growth), getNames(WH_growth)] <- result[reg_TUR, getYears(WH_growth), getNames(WH_growth)] + WH_growth_agg
+    
+    # browser()
 
   } else if (subtype == "Floorspace") {
     mappingfile <- toolGetMapping(type = "regional", name = "regionmappingEDGE.csv",

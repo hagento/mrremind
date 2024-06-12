@@ -51,7 +51,12 @@ calcFeDemandBuildings <- function(subtype) {
                                 interpolated_year = misingYearsBuildings,
                                 integrate_interpolated_years = TRUE,
                                 extrapolation_type = "constant")
-
+  
+  if(all(unlist(getSets(buildings)) == c("region", "year", "item", "d3"))) {
+    magclass::getSets(buildings) <- c("region", "year", "item", "scenario")
+    buildings <- magclass::dimOrder(buildings, c(2,1))
+  }
+  
   data <- mbind(stationary, buildings)
 
   # Prepare Mapping ----
@@ -73,7 +78,7 @@ calcFeDemandBuildings <- function(subtype) {
     na.omit() %>%
     filter(.data$EDGEitems %in% getNames(data, dim = "item")) %>%
     distinct()
-
+  
   if (length(setdiff(getNames(data, dim = "item"), mapping$EDGEitems) > 0)) {
     stop("Not all EDGE items are in the mapping")
   }
