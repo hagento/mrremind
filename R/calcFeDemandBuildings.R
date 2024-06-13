@@ -13,6 +13,9 @@ calcFeDemandBuildings <- function(subtype) {
 
   stationary <- readSource("Stationary")
   buildings  <- readSource("EdgeBuildings", subtype = "FE")
+  
+  # only extracting SSP2
+  stationary <- stationary[,,"SSP2"]
 
   # all 2016 values are zero
   # TODO: remove filtering, as 2016 values are available now
@@ -21,17 +24,14 @@ calcFeDemandBuildings <- function(subtype) {
   # aggregate to 5-year averages to suppress volatility
   buildings <- toolAggregateTimeSteps(buildings)
   stationary <- toolAggregateTimeSteps(stationary)
-
-  # add scenarios to stationary to match buildings scenarios by duplication
-  duplicateScens <- paste0("SSP2EU_", c("NAV_act", "NAV_ele", "NAV_tec", "NAV_lce", "NAV_all", "CAMP_weak", "CAMP_strong"))
-  stationary <- mbind(stationary, do.call(mbind, lapply(duplicateScens, function(to) {
-    setItems(stationary[, , "SSP2EU"], 3.1, to)
-  })))
+  
 
   if (subtype == "FE") {
 
     # drop RCP dimension (use fixed RCP)
-    buildings <- mselect(buildings, rcp = "fixed", collapseNames = TRUE)
+    # buildings <- mselect(buildings, rcp = "fixed", collapseNames = TRUE)
+    buildings <- mselect(buildings, rcp = "fixed", collapseNames = FALSE)
+    buildings <- magclass::collapseDim(buildings, dim = "rcp")
 
   } else {
 
@@ -51,11 +51,6 @@ calcFeDemandBuildings <- function(subtype) {
                                 interpolated_year = misingYearsBuildings,
                                 integrate_interpolated_years = TRUE,
                                 extrapolation_type = "constant")
-  
-  if(all(unlist(getSets(buildings)) == c("region", "year", "item", "d3"))) {
-    magclass::getSets(buildings) <- c("region", "year", "item", "scenario")
-    buildings <- magclass::dimOrder(buildings, c(2,1))
-  }
   
   data <- mbind(stationary, buildings)
 
@@ -118,6 +113,7 @@ calcFeDemandBuildings <- function(subtype) {
                        names = remindDims,
                        sets = getSets(data))
 
+  
   for (v in remindVars) {
 
     w <- mapping %>%
@@ -132,13 +128,9 @@ calcFeDemandBuildings <- function(subtype) {
 
     remind[, , getNames(tmp)] <- tmp
   }
+  
 
   # Prepare Output ----
-
-  # remove missing NAVIGATE scenarios
-  if (subtype %in% c("FE_buildings", "UE_buildings")) {
-    remind <- remind[, , grep("SSP2EU_(NAV|CAMP)_[a-z]*\\.rcp", getItems(remind, 3), value = TRUE), invert = TRUE]
-  }
 
   # change the scenario names for consistency with REMIND sets
   getNames(remind) <- gsub("^SSP", "gdp_SSP", getNames(remind))

@@ -11,10 +11,7 @@ convertEdgeBuildings <- function(x, subtype = "FE") {
   noYearDim <- function(x) setYears(x, NULL)
 
   addSSPnames <- function(x) {
-    do.call("mbind", lapply(c(paste0("SSP", c(1:5, "2EU", "2_lowEn")),
-                              paste0("SDP", c("", "_EI", "_RC", "_MC")),
-                              paste0("SSP2EU_NAV_", c("act", "tec", "ele", "lce", "all")),
-                              paste0("SSP2EU_CAMP_", c("weak", "strong"))),
+    do.call("mbind", lapply(c("SSP2"),
       function(s) setNames(x, paste(s, getNames(x), sep = "."))
     ))
   }
@@ -72,7 +69,6 @@ convertEdgeBuildings <- function(x, subtype = "FE") {
 
 
   if (subtype == "FE") {
-    # browser()
     #---- Explanations
     # For the historical data, weights are directly taken from the IEA
     # to ensure the consistency at the country level
@@ -91,7 +87,8 @@ convertEdgeBuildings <- function(x, subtype = "FE") {
     #--- First load the GDP data. Set average2020 to False to get yearly data as far as possible.
     wg <- calcOutput("GDP", average2020 = FALSE, aggregate = FALSE)
     # duplicate SSP2 for SSP2_lowEn an SSP2EU for Navigate and Campaigners scenarios
-    wg <- duplScens(wg)
+    # wg <- duplScens(wg)
+    wg <- wg[ , ,"gdp_SSP2"]
     getNames(wg) <- gsub("gdp_", "", getNames(wg))
 
     #--- Then load the final energy data
