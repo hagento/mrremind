@@ -167,7 +167,6 @@ convertEdgeBuildings <- function(x, subtype = "FE") {
     result[getRegions(WH_growth), getYears(WH_growth), getNames(WH_growth)] <- result[getRegions(WH_growth), getYears(WH_growth), getNames(WH_growth)] - WH_growth
     result[reg_TUR, getYears(WH_growth), getNames(WH_growth)] <- result[reg_TUR, getYears(WH_growth), getNames(WH_growth)] + WH_growth_agg
     
-    # browser()
 
   } else if (subtype == "Floorspace") {
     mappingfile <- toolGetMapping(type = "regional", name = "regionmappingEDGE.csv",
@@ -181,7 +180,8 @@ convertEdgeBuildings <- function(x, subtype = "FE") {
     getSets(wp) <- gsub("variable", "scenario", getSets(wp))
     getItems(wp, "scenario") <- gsub("pop_", "gdp_", getItems(wp, "scenario"))
     # duplicate SSP2 for SSP2_lowEn an SSP2EU for Navigate and Campaigners scenarios
-    wp <- duplScens(wp)
+    # wp <- duplScens(wp)
+    wp <- wp[, ,"gdp_SSP2"]
 
     x <- toolAggregate(x[, rem_years_hist, ], mappingfile, weight = wp,
                        from = region_col, to = iso_col)

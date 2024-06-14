@@ -14,7 +14,9 @@ calcFloorspace <- function(onlyTotal = FALSE) {
   data <- readSource("EdgeBuildings", subtype = "Floorspace")
 
   if (onlyTotal) {
-    data <- collapseNames(data[, , "buildings"])
+    # data <- collapseNames(data[, , "buildings"])
+    data <- data[, , "buildings"]
+    data <- collapseDim(data, dim = "variable")
   }
 
   return(list(x = data,

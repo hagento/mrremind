@@ -29,7 +29,7 @@ readEdgeBuildings <- function(subtype = c("FE", "Floorspace")) {
     Floorspace = {
       data <- read.csv(file.path(ver, "EDGE_buildings_floorspace.csv"))
       data <- as.magpie(data)
-      data <- collapseNames(data)
+      # data <- collapseNames(data)
       getSets(data) <- c("region", "year", "scenario", "variable")
     }
   )
