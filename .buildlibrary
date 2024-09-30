@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ValidationKey: '38546504'
-=======
-ValidationKey: '384207048991'
->>>>>>> 1bbdc94 (changed rev)
 AcceptedWarnings:
 - 'Warning: package ''.*'' was built under R version'
 - 'Warning: namespace ''.*'' is not available and has been replaced'
