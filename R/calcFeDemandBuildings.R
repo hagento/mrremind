@@ -67,6 +67,7 @@ calcFeDemandBuildings <- function(subtype, scenario) {
       mapping <- mapping %>%
         mutate(EDGE_buildings_items = gsub("_fe$", "_ue", .data[["EDGE_buildings_items"]]),
                REMINDitems_out = gsub("^fe", "ue", .data[["REMINDitems_out"]])) %>%
+        filter(.data$EDGE_buildings_items != "ict_elec_ue") %>%
         rbind(mapping)
       remindVars <- gsub("^fe", "ue", remindVars)
     }

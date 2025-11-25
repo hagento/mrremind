@@ -68,9 +68,12 @@ convertEdgeBuildings <- function(x, subtype, subset) {
       stop("mappingWeightConvertEDGE is missing EDGE buildings items")
     }
 
+
+    # TODO: write UEs explicitly in mapping
     # extend mapping for useful energy
     structureMapping <- structureMapping %>%
       mutate("EDGE_buildings_items" = gsub("_fe$", "_ue", .data$EDGE_buildings_items)) %>%
+      filter(.data$EDGE_buildings_items != "ict_elec_ue") %>%
       rbind(structureMapping)
 
     wfe <- toolAggregate(wfe, rel = structureMapping, from = "io_buildings", to = "EDGE_buildings_items", dim = 3)
