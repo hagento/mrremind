@@ -59,7 +59,7 @@ calcFeDemandBuildings <- function(subtype, scenario) {
 
   } else {
 
-    remindVars <- filter(mapping, grepl("^fe..b$|^feel..b$", .data$REMINDitems_out))
+    remindVars <- filter(mapping, grepl("^fe.{1,4}b$|^feel.{1,4}b$", .data$REMINDitems_out))
     remindVars <- unique(remindVars$REMINDitems_out)
 
     # Extend mapping for Useful Energy
